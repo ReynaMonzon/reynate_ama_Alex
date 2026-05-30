@@ -1128,11 +1128,16 @@ function playCatMeow() {
 /* ═════════════════════════════════════════════════
    MÚSICA
 ═════════════════════════════════════════════════ */
+let musicPlaying = false;
+
 function toggleMusic() {
   const audio = document.getElementById('bgMusic');
   const btn   = document.getElementById('musicBtn');
+  if (!audio || !btn) return;
+
   if (musicPlaying) {
-    audio.pause(); musicPlaying = false;
+    audio.pause();
+    musicPlaying = false;
     btn.classList.remove('playing');
     btn.textContent = '🎵 Nuestra melodía';
   } else {
@@ -1141,6 +1146,29 @@ function toggleMusic() {
     btn.classList.add('playing');
     btn.textContent = '🎵 ♪ Sonando ♪';
   }
+}
+
+function goToScene2() {
+  const audio = document.getElementById('bgMusic');
+  const btn   = document.getElementById('musicBtn');
+  
+  if (audio && btn) {
+    audio.volume = 0.4;
+    audio.play().then(() => {
+      musicPlaying = true;
+      btn.classList.add('playing');
+      btn.textContent = '🎵 ♪ Sonando ♪';
+    }).catch(() => {
+      console.log("El navegador bloqueó el autoplay. Esperando clic.");
+    });
+  }
+
+  // Animación para pasar a la Escena 2
+  flash(() => {
+    document.getElementById('scene1').style.display = 'none';
+    const s2 = document.getElementById('scene2');
+    s2.style.display = 'flex';
+  });
 }
 
 /* ═════════════════════════════════════════════════
@@ -2030,6 +2058,52 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+  /* ═════════════════════════════════════════════════
+   MÚSICA Y CONTROL DE REPRODUCCIÓN
+═════════════════════════════════════════════════ */
+let musicPlaying = false;
+
+function toggleMusic() {
+  const audio = document.getElementById('bgMusic');
+  const btn   = document.getElementById('musicBtn');
+  if (!audio || !btn) return;
+
+  if (musicPlaying) {
+    audio.pause();
+    musicPlaying = false;
+    btn.classList.remove('playing');
+    btn.textContent = '🎵 Nuestra melodía';
+  } else {
+    audio.play().catch(() => {});
+    musicPlaying = true;
+    btn.classList.add('playing');
+    btn.textContent = '🎵 ♪ Sonando ♪';
+  }
+}
+
+function goToScene2() {
+  const audio = document.getElementById('bgMusic');
+  const btn   = document.getElementById('musicBtn');
+  
+  if (audio && btn) {
+    audio.volume = 0.4;
+    audio.play().then(() => {
+      musicPlaying = true;
+      btn.classList.add('playing');
+      btn.textContent = '🎵 ♪ Sonando ♪';
+    }).catch(() => {
+      console.log("Interacción requerida por el navegador");
+    });
+  }
+
+  flash(() => {
+    document.getElementById('scene1').style.display = 'none';
+    const s2 = document.getElementById('scene2');
+    s2.style.display = 'flex';
+  });
+}
 </script>
+  <audio id="bgMusic" src="música.mp3" loop></audio>
+<button id="musicBtn" onclick="toggleMusic()">🎵 Nuestra melodía</button>
 </body>
 </html>

@@ -2061,6 +2061,7 @@ document.head.appendChild(style);
   /* ═════════════════════════════════════════════════
    MÚSICA Y CONTROL DE REPRODUCCIÓN
 ═════════════════════════════════════════════════ */
+<script>
 let musicPlaying = false;
 
 function toggleMusic() {
@@ -2086,6 +2087,7 @@ function goToScene2() {
   const btn   = document.getElementById('musicBtn');
   
   if (audio && btn) {
+    audio.muted = false; // Forzar a quitar el silencio interno
     audio.volume = 0.4;
     audio.play().then(() => {
       musicPlaying = true;
@@ -2096,14 +2098,23 @@ function goToScene2() {
     });
   }
 
-  flash(() => {
+  if (typeof flash === 'function') {
+    flash(() => {
+      document.getElementById('scene1').style.display = 'none';
+      const s2 = document.getElementById('scene2');
+      s2.style.display = 'flex';
+    });
+  } else {
     document.getElementById('scene1').style.display = 'none';
     const s2 = document.getElementById('scene2');
     s2.style.display = 'flex';
-  });
+  }
 }
 </script>
-  <audio id="bgMusic" src="música.mp3" loop></audio>
-<button id="musicBtn" onclick="toggleMusic()">🎵 Nuestra melodía</button>
+
+<audio id="bgMusic" loop preload="auto">
+  <source src="musica.mp3" type="audio/mpeg" />
+</audio>
+
 </body>
 </html>
